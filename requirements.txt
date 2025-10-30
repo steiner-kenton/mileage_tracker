@@ -11,4 +11,4 @@ Pillow>=10.0.0
 # Uncomment for development:
 # pytest>=7.4.0
 # black>=23.0.0
-# flake8>=6.0.0
+
