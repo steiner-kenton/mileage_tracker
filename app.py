@@ -25,7 +25,7 @@ else:
 
 
 # Configure Streamlit page
-st.set_page_config(page_title="Mileage Manager", layout="wide")
+st.set_page_config(page_title="Tax Expense Tracker", layout="wide")
 
 def initialize_session_state():
     """Initialize session state variables"""
@@ -42,7 +42,7 @@ def main():
     initialize_session_state()
     
     # App title
-    st.title("🚗 Mileage Manager Dashboard")
+    st.title("Tax Expense Tracker")
     
     st.markdown("""
     Welcome to your Mileage Manager! Use the sidebar to navigate between different sections:
