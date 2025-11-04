@@ -1,0 +1,30 @@
+# Optional: Streamlit configuration for cloud deployment
+# This file configures the app's theme and behavior
+
+[theme]
+# Primary color for interactive elements
+primaryColor = "#FF6B6B"
+
+# Background color for the main content area
+backgroundColor = "#FFFFFF"
+
+# Background color for the sidebar
+secondaryBackgroundColor = "#F0F2F6"
+
+# Text color
+textColor = "#262730"
+
+# Font family
+font = "sans serif"
+
+[server]
+# Enable CORS for cloud deployment
+enableCORS = false
+enableXsrfProtection = true
+
+# Set max upload size (for receipt images)
+maxUploadSize = 200
+
+[browser]
+# Gather usage stats (disable for privacy)
+gatherUsageStats = false
