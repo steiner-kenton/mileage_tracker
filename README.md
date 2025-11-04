@@ -36,6 +36,7 @@ The IRS requires detailed mileage logs including dates, destinations, and busine
 - Quick overview of saved locations, total trips, and receipts
 - Summary statistics at a glance
 - Easy navigation to all features
+- **💡 Tip:** Toggle dark/light mode using the ⚙️ Settings menu (click the ☰ menu in the top-right corner)
 
 ### 2. Mileage Dictionary 📍
 **Manage Your Frequent Locations**
@@ -67,7 +68,6 @@ The IRS requires detailed mileage logs including dates, destinations, and busine
 - Edit trip details (date, locations, distance)
 - Delete trips with confirmation
 - Export to CSV for tax filing
-- No annoying warnings when logging the same route on different days
 
 ### 4. Receipt Tracker 🧾
 **Organize Business Expenses**

@@ -68,6 +68,7 @@ Your Supabase database should already be configured with:
 3. Test all CRUD operations
 4. Test receipt OCR upload
 5. Test Google Maps address lookup
+6. Try switching to dark mode (☰ menu → Settings → Theme)
 
 ## Potential Issues & Solutions
 

@@ -1,8 +1,12 @@
-# Optional: Streamlit configuration for cloud deployment
+# Streamlit configuration for cloud deployment
 # This file configures the app's theme and behavior
+# Users can switch between light/dark mode using the ☰ menu in the app
 
 [theme]
-# Primary color for interactive elements
+# Set base theme - users can toggle to dark mode in settings
+base = "light"
+
+# Primary color for interactive elements (buttons, links, etc.)
 primaryColor = "#FF6B6B"
 
 # Background color for the main content area

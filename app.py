@@ -7,25 +7,29 @@ import streamlit as st
 from src.utils.supabase_utils import get_sheet_data
 from src.utils.auth import init_connection, login_or_signup, check_session
 
+# Configure Streamlit page (must be first Streamlit command)
+st.set_page_config(
+    page_title="Tax Expense Tracker",
+    page_icon="🚗",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
 # Initialize Auth Connection to Supabase
 supabase = init_connection()
 
 # Check authentication
 if check_session():
-    st.sidebar.success(f"Logged in as {st.session_state['user'].email}")
+    st.sidebar.success(f"✅ {st.session_state['user'].email}")
     
     # Add logout button to sidebar
-    if st.sidebar.button("Logout"):
+    if st.sidebar.button("🚪 Logout", use_container_width=True):
         st.session_state.pop("user", None)
         st.session_state.pop("auth_session", None)
         st.rerun()
 else:
     login_or_signup()
     st.stop()  # Stop app until login
-
-
-# Configure Streamlit page
-st.set_page_config(page_title="Tax Expense Tracker", layout="wide")
 
 def initialize_session_state():
     """Initialize session state variables"""
@@ -41,15 +45,30 @@ def main():
     # Initialize session state
     initialize_session_state()
     
-    # App title
-    st.title("Tax Expense Tracker")
+    # Custom sidebar
+    with st.sidebar:
+        st.markdown("---")
+        st.markdown("### 🧭 Navigation")
+        st.markdown("""
+        **📍 Mileage Dictionary**  
+        Manage saved locations
+        
+        **🛣️ Mileage Log**  
+        Track your trips
+        
+        **🧾 Receipt Tracker**  
+        Upload receipts
+        """)
+        st.markdown("---")
+        st.markdown("### 💡 Quick Tips")
+        st.info("💾 Save frequently visited locations first for faster trip logging!")
+    
+    # App title with icon
+    st.title("🚗 Tax Expense Tracker")
+    st.markdown("### Welcome to your Mileage Manager Dashboard")
     
     st.markdown("""
-    Welcome to your Mileage Manager! Use the sidebar to navigate between different sections:
-    
-    - **📍 Mileage Dictionary** - Manage your saved locations
-    - **🛣️ Mileage Log** - Track and log your trips
-    - **🧾 Receipt Tracker** - Upload and manage receipts
+    Track your business expenses, mileage, and receipts all in one place. Use the navigation in the sidebar to get started!
     """)
     
     # Show quick stats
