@@ -102,7 +102,9 @@ Your Supabase database should already be configured with:
 Any push to your `main` branch will automatically redeploy the app!
 
 ### Sharing Your App
-Your app will have a URL like: `https://your-app-name.streamlit.app`
+**Live Deployment:** [https://taxexpensetracker.streamlit.app/](https://taxexpensetracker.streamlit.app/)
+
+Your app URL follows the format: `https://your-app-name.streamlit.app`
 Share this with users who need access.
 
 ## Environment Variables (Optional)
