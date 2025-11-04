@@ -6,7 +6,7 @@ import pandas as pd
 from datetime import datetime
 from src.utils.google_api import get_google_address, get_mileage
 from src.utils.ocr_utils import process_receipt_ocr
-from src.utils.sheets_utils import append_to_gsheet
+from src.utils.supabase_utils import add_data
 
 def parse_ocr_date(date_string):
     """
@@ -52,12 +52,46 @@ def render_trip_form(current_data_dict, current_data_log):
     st.subheader("Add New Trip to Mileage Log")
     
     if not current_data_dict.empty:
+        # Initialize session state for location swap
+        if 'swap_locations' not in st.session_state:
+            st.session_state.swap_locations = False
+        if 'start_location_index' not in st.session_state:
+            st.session_state.start_location_index = 0
+        if 'end_location_index' not in st.session_state:
+            st.session_state.end_location_index = 0
+            
+        # Get locations list
+        locations = current_data_dict['location_name'].tolist()
+        
         # Start of form to add a new trip
         with st.form(key='mileage_log_form'):
-            # Select locations from Mileage_Dictionary for start_location_name and end_location_name with placeholders
-            locations = current_data_dict['location_name'].tolist()
-            start_location_name = st.selectbox("Select Start Location", ["Select a location"] + locations)
-            end_location_name = st.selectbox("Select End Location", ["Select a location"] + locations)
+            # Location selection with swap button
+            loc_col1, swap_col, loc_col2 = st.columns([5, 1, 5])
+            
+            with loc_col1:
+                start_location_name = st.selectbox(
+                    "Select Start Location", 
+                    ["Select a location"] + locations,
+                    index=st.session_state.start_location_index,
+                    key="start_loc_select"
+                )
+            
+            with swap_col:
+                # Add some vertical spacing to align with selectbox
+                st.markdown("<br>", unsafe_allow_html=True)
+                if st.form_submit_button("⇄", help="Swap start and end locations", use_container_width=True):
+                    # Swap the indices
+                    st.session_state.start_location_index, st.session_state.end_location_index = \
+                        st.session_state.end_location_index, st.session_state.start_location_index
+                    st.rerun()
+            
+            with loc_col2:
+                end_location_name = st.selectbox(
+                    "Select End Location", 
+                    ["Select a location"] + locations,
+                    index=st.session_state.end_location_index,
+                    key="end_loc_select"
+                )
 
             # Input for trip_date with no default value
             trip_date = st.date_input("Enter Trip Date", max_value=datetime.today())
@@ -68,6 +102,10 @@ def render_trip_form(current_data_dict, current_data_log):
             # Add trip to entries list when form is submitted
             if submit_button:
                 if start_location_name != "Select a location" and end_location_name != "Select a location":
+                    # Update session state indices for next time
+                    st.session_state.start_location_index = (["Select a location"] + locations).index(start_location_name)
+                    st.session_state.end_location_index = (["Select a location"] + locations).index(end_location_name)
+                    
                     # Get the address for start and end location names
                     start_location_address = current_data_dict[current_data_dict['location_name'] == start_location_name]['location_address'].values[0]
                     end_location_address = current_data_dict[current_data_dict['location_name'] == end_location_name]['location_address'].values[0]
@@ -93,11 +131,11 @@ def render_trip_form(current_data_dict, current_data_log):
             entries_log_df = pd.DataFrame(st.session_state.entries_mileage_log, columns=["trip_date", "start_location_name", "start_location_address", "end_location_name","end_location_address", "total_mileage"])
             st.dataframe(entries_log_df, hide_index=True, height=200)
 
-        # Submit Changes to Google Sheets
+        # Submit Changes to Database
         if st.button("Submit Changes to Mileage Log"):
             if st.session_state.entries_mileage_log:
                 new_data_log = pd.DataFrame(st.session_state.entries_mileage_log, columns=["trip_date", "start_location_name", "start_location_address", "end_location_name","end_location_address", "total_mileage"])
-                append_to_gsheet(new_data_log, "mileage_log")
+                add_data(new_data_log, "mileage_log")
                 st.session_state.entries_mileage_log = []
                 st.rerun()
     else:
@@ -148,7 +186,7 @@ def render_location_form(current_data_dict):
                 # Check if the location_name already exists in the session state entries (pending locations)
                 location_names_in_entries = [entry[0] for entry in st.session_state.entries_mileage_dict]
                 
-                # Check if the location_name already exists in the current dictionary (Google Sheets data)
+                # Check if the location_name already exists in the current dictionary
                 location_names_in_existing_dict = current_data_dict["location_name"].tolist()
                 
                 if location_name in location_names_in_entries or location_name in location_names_in_existing_dict:
@@ -160,17 +198,17 @@ def render_location_form(current_data_dict):
             else:
                 st.error("Please enter both location name and address!")
 
-    # Display new locations added (but not yet submitted to Google Sheets)
+    # Display new locations added (but not yet submitted to database)
     if st.session_state.entries_mileage_dict:
         st.write("### Locations to Submit to Mileage Dictionary")
         entries_dict_df = pd.DataFrame(st.session_state.entries_mileage_dict, columns=["Location Name", "Location Address"])
         st.dataframe(entries_dict_df, hide_index=True, height=200)
     
-    # Submit Changes to Google Sheets
+    # Submit Changes to Database
     if st.button("Submit Changes to Mileage Dictionary"):
         if st.session_state.entries_mileage_dict:
             new_data_dict = pd.DataFrame(st.session_state.entries_mileage_dict)
-            append_to_gsheet(new_data_dict, "Mileage_Dictionary")
+            add_data(new_data_dict, "Mileage_Dictionary")
             # Clear session state values (delete keys to reset form fields)
             if "google_location_address" in st.session_state:
                 del st.session_state["google_location_address"]
@@ -294,13 +332,13 @@ def render_receipt_section(current_receipts_df):
             )
             st.dataframe(entries_receipts_df, hide_index=True, height=200)
             
-            # Submit receipts to Google Sheets
-            if st.button("Submit Receipts to Google Sheets", key="submit_receipts"):
+            # Submit receipts to Database
+            if st.button("Submit Receipts to Database", key="submit_receipts"):
                 if st.session_state.entries_receipts:
                     new_receipts_data = pd.DataFrame(
                         st.session_state.entries_receipts,
                         columns=["date", "store_name", "total", "upload_timestamp"]
                     )
-                    append_to_gsheet(new_receipts_data, "Receipts")
+                    add_data(new_receipts_data, "Receipts")
                     st.session_state.entries_receipts = []
                     st.rerun()
