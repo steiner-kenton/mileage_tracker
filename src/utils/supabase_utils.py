@@ -235,20 +235,60 @@ def add_receipt(date, store_name, total, ocr_raw_text=None):
     except Exception as e:
         raise Exception(f"Error adding receipt: {str(e)}")
 
-# Backward compatibility aliases (so we don't have to change too much code)
-def get_sheet_data(sheet_name, create_if_missing=False, headers=None):
-    """
-    Backward compatibility function - maps old sheet names to Supabase functions
-    """
-    if sheet_name == "Mileage_Dictionary":
-        return get_mileage_dictionary()
-    elif sheet_name == "mileage_log":
-        return get_mileage_log()
-    elif sheet_name == "Receipts":
-        return get_receipts()
-    else:
-        st.warning(f"Unknown sheet name: {sheet_name}")
+def get_data(table_name, create_if_missing=False, headers=None):
+    """Get data from Supabase table"""
+    supabase_client = init_connection()
+    user_id = st.session_state.get("user").id if "user" in st.session_state else None
+    
+    if not user_id:
         return pd.DataFrame()
+    
+    try:
+        # Map table names to Supabase tables
+        if table_name == "Mileage_Dictionary":
+            response = supabase_client.table("mileage_dictionary").select("*").eq("user_id", user_id).execute()
+            
+            if response.data:
+                df = pd.DataFrame(response.data)
+                # Only return the columns we need for the UI
+                return df[['location_name', 'location_address']]
+            else:
+                return pd.DataFrame(columns=["location_name", "location_address"])
+        
+        elif table_name == "mileage_log":
+            response = supabase_client.table("mileage_log").select("*").eq("user_id", user_id).order("date", desc=True).execute()
+            
+            if response.data:
+                df = pd.DataFrame(response.data)
+                # Only return the columns we need for the UI
+                columns = ["date", "start_location", "start_address", 
+                          "end_location", "end_address", "distance"]
+                return df[columns]
+            else:
+                return pd.DataFrame(columns=["date", "start_location", "start_address", 
+                                            "end_location", "end_address", "distance"])
+        
+        elif table_name == "Receipts":
+            response = supabase_client.table("receipts").select("*").eq("user_id", user_id).order("date", desc=True).execute()
+            
+            if response.data:
+                df = pd.DataFrame(response.data)
+                # Only return the columns we need for the UI
+                columns = ["date", "store_name", "total", "upload_timestamp"]
+                return df[columns]
+            else:
+                return pd.DataFrame(columns=["date", "store_name", "total", "upload_timestamp"])
+        
+        else:
+            return pd.DataFrame()
+    except Exception as e:
+        st.error(f"Error loading data from {table_name}: {str(e)}")
+        return pd.DataFrame()
+
+# Backward compatibility alias
+def get_sheet_data(sheet_name, create_if_missing=False, headers=None):
+    """Backward compatibility wrapper for get_data"""
+    return get_data(sheet_name, create_if_missing, headers)
 
 def add_data(data, table_name):
     """

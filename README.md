@@ -1,26 +1,26 @@
-# 🚗 Mileage Tracker
+# Mileage Tracker
 
 A comprehensive web application for tracking business mileage, managing frequent locations, and organizing receipts for tax deduction purposes. Built with Streamlit and Supabase.
 
-**🌐 Live App:** [https://taxexpensetracker.streamlit.app/](https://taxexpensetracker.streamlit.app/)
+**Live App:** [https://taxexpensetracker.streamlit.app/](https://taxexpensetracker.streamlit.app/)
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://taxexpensetracker.streamlit.app)
 
-## 📋 Overview
+## Overview
 
 Mileage Tracker helps you maintain accurate records of your business travel for tax deductions. The app automatically calculates distances between locations, stores your trip history, and provides receipt management with OCR capabilities.
 
 ### Key Features
 
-- 📍 **Location Management** - Save frequently visited locations with Google Maps integration
-- 🛣️ **Mileage Logging** - Track trips with automatic distance calculation
-- 🧾 **Receipt Tracker** - Upload and OCR-process receipts for expense tracking
-- 🔐 **Secure Authentication** - User accounts with Supabase authentication
-- 📊 **Trip Statistics** - View total miles, estimated deductions, and trip history
-- 📥 **Data Export** - Download your mileage log as CSV for tax filing
-- 🔄 **Smart Caching** - Reuses distances for repeat routes to save API calls
+- **Location Management** - Save frequently visited locations with Google Maps integration
+- **Mileage Logging** - Track trips with automatic distance calculation
+- **Receipt Tracker** - Upload and OCR-process receipts for expense tracking
+- **Secure Authentication** - User accounts with Supabase authentication
+- **Trip Statistics** - View total miles, estimated deductions, and trip history
+- **Data Export** - Download your mileage log as CSV for tax filing
+- **Smart Caching** - Reuses distances for repeat routes to save API calls
 
-## 🎯 Purpose
+## Purpose
 
 This application was designed for:
 - **Self-employed professionals** tracking business miles for tax deductions
@@ -30,15 +30,15 @@ This application was designed for:
 
 The IRS requires detailed mileage logs including dates, destinations, and business purposes. This app simplifies that process.
 
-## ✨ Functionality
+## Functionality
 
 ### 1. Dashboard (Home)
 - Quick overview of saved locations, total trips, and receipts
 - Summary statistics at a glance
 - Easy navigation to all features
-- **💡 Tip:** Toggle dark/light mode using the ⚙️ Settings menu (click the ☰ menu in the top-right corner)
+- **Tip:** Toggle dark/light mode using the Settings menu (click the menu in the top-right corner)
 
-### 2. Mileage Dictionary 📍
+### 2. Mileage Dictionary 
 **Manage Your Frequent Locations**
 - Add new locations using Google Maps address search
 - Store location names and addresses
@@ -51,7 +51,7 @@ The IRS requires detailed mileage logs including dates, destinations, and busine
 - Prevents duplicate location names
 - CRUD operations (Create, Read, Update, Delete)
 
-### 3. Mileage Log 🛣️
+### 3. Mileage Log 
 **Track Your Business Trips**
 - Log trips between saved locations
 - Automatic distance calculation using Google Distance Matrix API
@@ -69,7 +69,7 @@ The IRS requires detailed mileage logs including dates, destinations, and busine
 - Delete trips with confirmation
 - Export to CSV for tax filing
 
-### 4. Receipt Tracker 🧾
+### 4. Receipt Tracker 
 **Organize Business Expenses**
 - Upload receipt images (PNG, JPG, JPEG, PDF)
 - Automatic OCR text extraction using Tesseract
@@ -85,7 +85,7 @@ The IRS requires detailed mileage logs including dates, destinations, and busine
 - Upload timestamp tracking
 - Filter by store name or amount
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Frontend
 - **Streamlit** - Web application framework
@@ -107,7 +107,7 @@ The IRS requires detailed mileage logs including dates, destinations, and busine
 - Session state management for user experience
 - Row Level Security (RLS) for data isolation
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Python 3.9+
@@ -158,41 +158,7 @@ The IRS requires detailed mileage logs including dates, destinations, and busine
    streamlit run app.py
    ```
 
-## 📊 Database Schema
-
-### Tables
-
-**mileage_dictionary**
-- `id` (Primary Key)
-- `user_id` (Foreign Key to auth.users)
-- `location_name` (Text)
-- `location_address` (Text)
-- `created_at` (Timestamp)
-
-**mileage_log**
-- `id` (Primary Key)
-- `user_id` (Foreign Key to auth.users)
-- `date` (Date)
-- `start_location` (Text)
-- `start_address` (Text)
-- `end_location` (Text)
-- `end_address` (Text)
-- `distance` (Numeric)
-- `created_at` (Timestamp)
-
-**receipts**
-- `id` (Primary Key)
-- `user_id` (Foreign Key to auth.users)
-- `date` (Date)
-- `store_name` (Text)
-- `total` (Numeric)
-- `upload_timestamp` (Timestamp)
-- `ocr_raw_text` (Text, optional)
-- `created_at` (Timestamp)
-
-All tables include Row Level Security (RLS) policies to ensure users can only access their own data.
-
-## 🔐 Security
+## Security
 
 - **Authentication:** Supabase Auth with email/password
 - **Authorization:** Row Level Security (RLS) policies
@@ -200,7 +166,7 @@ All tables include Row Level Security (RLS) policies to ensure users can only ac
 - **Secrets Management:** API keys stored securely in Streamlit secrets
 - **HTTPS:** Encrypted connections in production
 
-## 📈 API Usage & Costs
+## API Usage & Costs
 
 ### Google Maps API
 - **Places API:** ~$17 per 1,000 requests (address search)
@@ -213,25 +179,15 @@ All tables include Row Level Security (RLS) policies to ensure users can only ac
 - **API Calls:** Unlimited in free tier
 - **Authentication:** Included
 
-## 🚢 Deployment
-
-See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions to Streamlit Community Cloud.
-
-**Quick Deploy:**
-1. Push to GitHub
-2. Connect to Streamlit Community Cloud
-3. Add secrets in Streamlit Cloud dashboard
-4. Deploy!
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 mileage_tracker/
 ├── app.py                          # Main application (Dashboard)
 ├── pages/
-│   ├── 1_📍_Mileage_Dictionary.py  # Location management
-│   ├── 2_🛣️_Mileage_Log.py         # Trip logging
-│   └── 3_🧾_Receipt_Tracker.py     # Receipt management
+│   ├── 1_Mileage_Dictionary.py     # Location management
+│   ├── 2_Mileage_Log.py            # Trip logging
+│   └── 3_Receipt_Tracker.py        # Receipt management
 ├── src/
 │   ├── components/
 │   │   └── ui_components.py        # Reusable UI components
@@ -250,43 +206,26 @@ mileage_tracker/
 └── README.md                       # This file
 ```
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Google Maps API for location and distance services
 - Supabase for backend infrastructure
 - Tesseract OCR for receipt processing
 - Streamlit for the web framework
 
-## 📞 Support
+## Support
 
 For issues or questions:
 - Open an issue on GitHub
 - Check the [Deployment Guide](DEPLOYMENT.md)
 - Review the [Deployment Checklist](DEPLOYMENT_CHECKLIST.md)
-
-## 🎯 Future Enhancements
-
-- [ ] Mobile app version
-- [ ] Automatic trip detection via GPS
-- [ ] Calendar integration
-- [ ] Multi-vehicle tracking
-- [ ] Custom mileage rates
-- [ ] Bulk receipt upload
-- [ ] Tax report generation
-- [ ] Integration with accounting software
-- [ ] Expense categorization
-- [ ] Mileage maps visualization
-
----
-
-**Built with ❤️ for better mileage tracking**
 
 *Note: Always consult with a tax professional regarding deduction eligibility and record-keeping requirements for your specific situation.*

@@ -79,7 +79,7 @@ def render_trip_form(current_data_dict, current_data_log):
             with swap_col:
                 # Add some vertical spacing to align with selectbox
                 st.markdown("<br>", unsafe_allow_html=True)
-                if st.form_submit_button("⇄", help="Swap start and end locations", use_container_width=True):
+                if st.form_submit_button("↔", help="Swap start and end locations", use_container_width=True):
                     # Swap the indices
                     st.session_state.start_location_index, st.session_state.end_location_index = \
                         st.session_state.end_location_index, st.session_state.start_location_index

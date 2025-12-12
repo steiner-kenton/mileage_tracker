@@ -9,7 +9,7 @@ from src.utils.auth import init_connection, check_session
 from src.components.ui_components import render_trip_form
 
 # Configure page
-st.set_page_config(page_title="Mileage Log", page_icon="🛣️", layout="wide")
+st.set_page_config(page_title="Mileage Log", layout="wide")
 
 # Check authentication
 supabase = init_connection()
@@ -26,7 +26,7 @@ else:
     st.stop()
 
 # Page content
-st.title("🛣️ Mileage Log")
+st.title("Mileage Log")
 st.markdown("Track your business trips and mileage for tax deductions.")
 
 # Initialize session state for editing
@@ -65,7 +65,7 @@ with col2:
     
     with col_filter2:
         # Search filter
-        search = st.text_input("🔍 Search trips", placeholder="Type to filter...")
+        search = st.text_input("Search trips", placeholder="Type to filter...")
     
     # Apply date filter
     filtered_log = current_data_log.copy()
@@ -148,7 +148,7 @@ with col2:
         # Download button
         csv = filtered_log.to_csv(index=False)
         st.download_button(
-            label="📥 Download as CSV",
+            label="Download as CSV",
             data=csv,
             file_name=f"mileage_log_{datetime.now().strftime('%Y%m%d')}.csv",
             mime="text/csv"
@@ -183,7 +183,7 @@ with col2:
             action_col1, action_col2 = st.columns(2)
             
             with action_col1:
-                if st.button("✏️ Edit Trip", disabled=(selected_trip_label == "Select a trip...")):
+                if st.button("Edit Trip", disabled=(selected_trip_label == "Select a trip...")):
                     selected_idx = trip_options.index(selected_trip_label)
                     st.session_state.trip_to_edit = trips_with_ids.iloc[selected_idx].to_dict()
                     st.session_state.editing_trip = True
@@ -191,7 +191,7 @@ with col2:
                     st.rerun()
             
             with action_col2:
-                if st.button("🗑️ Delete Trip", disabled=(selected_trip_label == "Select a trip...")):
+                if st.button("Delete Trip", disabled=(selected_trip_label == "Select a trip...")):
                     selected_idx = trip_options.index(selected_trip_label)
                     st.session_state.trip_to_delete = trips_with_ids.iloc[selected_idx].to_dict()
                     st.session_state.deleting_trip = True
@@ -234,10 +234,10 @@ with col2:
                     submit_col1, submit_col2 = st.columns(2)
                     
                     with submit_col1:
-                        save_button = st.form_submit_button("💾 Save Changes", use_container_width=True)
+                        save_button = st.form_submit_button("Save Changes", use_container_width=True)
                     
                     with submit_col2:
-                        cancel_button = st.form_submit_button("❌ Cancel", use_container_width=True)
+                        cancel_button = st.form_submit_button("Cancel", use_container_width=True)
                     
                     if save_button:
                         try:
@@ -275,7 +275,7 @@ with col2:
             # Delete confirmation
             if st.session_state.deleting_trip and st.session_state.trip_to_delete:
                 st.divider()
-                st.subheader("⚠️ Confirm Deletion")
+                st.subheader("Confirm Deletion")
                 trip = st.session_state.trip_to_delete
                 trip_date = pd.to_datetime(trip['date']).strftime('%Y-%m-%d')
                 st.warning(f"Are you sure you want to delete this trip?\n\n**{trip_date}: {trip['start_location']} → {trip['end_location']} ({trip['distance']} mi)**")
@@ -283,7 +283,7 @@ with col2:
                 conf_col1, conf_col2 = st.columns(2)
                 
                 with conf_col1:
-                    if st.button("✅ Yes, Delete", use_container_width=True):
+                    if st.button("Yes, Delete", use_container_width=True):
                         try:
                             supabase.table('mileage_log').delete().eq(
                                 'id', trip['id']
@@ -299,7 +299,7 @@ with col2:
                             st.error(f"Error deleting trip: {str(e)}")
                 
                 with conf_col2:
-                    if st.button("❌ Cancel", use_container_width=True):
+                    if st.button("Cancel", use_container_width=True):
                         st.session_state.deleting_trip = False
                         st.session_state.trip_to_delete = None
                         st.rerun()
@@ -307,7 +307,7 @@ with col2:
         st.info("No trips logged yet. Add your first trip using the form on the left!")
 
 # Add helpful tips
-with st.expander("💡 Tips for Logging Trips"):
+with st.expander("Tips for Logging Trips"):
     st.markdown("""
     - **Log trips promptly** to ensure accuracy
     - **Use saved locations** from the Mileage Dictionary for consistency

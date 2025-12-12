@@ -1,7 +1,3 @@
-"""
-Mileage Manager - Main Application
-A Streamlit application for tracking mileage and processing receipts
-"""
 import pandas as pd
 import streamlit as st
 from src.utils.supabase_utils import get_sheet_data
@@ -10,7 +6,7 @@ from src.utils.auth import init_connection, login_or_signup, check_session
 # Configure Streamlit page (must be first Streamlit command)
 st.set_page_config(
     page_title="Tax Expense Tracker",
-    page_icon="🚗",
+    page_icon="�",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -20,10 +16,10 @@ supabase = init_connection()
 
 # Check authentication
 if check_session():
-    st.sidebar.success(f"✅ {st.session_state['user'].email}")
+    st.sidebar.success(f"{st.session_state['user'].email}")
     
     # Add logout button to sidebar
-    if st.sidebar.button("🚪 Logout", use_container_width=True):
+    if st.sidebar.button("Logout", use_container_width=True):
         st.session_state.pop("user", None)
         st.session_state.pop("auth_session", None)
         st.rerun()
@@ -45,34 +41,16 @@ def main():
     # Initialize session state
     initialize_session_state()
     
-    # Custom sidebar
-    with st.sidebar:
-        st.markdown("---")
-        st.markdown("### 🧭 Navigation")
-        st.markdown("""
-        **📍 Mileage Dictionary**  
-        Manage saved locations
-        
-        **🛣️ Mileage Log**  
-        Track your trips
-        
-        **🧾 Receipt Tracker**  
-        Upload receipts
-        """)
-        st.markdown("---")
-        st.markdown("### 💡 Quick Tips")
-        st.info("💾 Save frequently visited locations first for faster trip logging!")
-    
     # App title with icon
-    st.title("🚗 Tax Expense Tracker")
+    st.title("Tax Expense Tracker")
     st.markdown("### Welcome to your Mileage Manager Dashboard")
     
     st.markdown("""
-    Track your business expenses, mileage, and receipts all in one place. Use the navigation in the sidebar to get started!
+    Track your business expenses, mileage, and receipts all in one place. Use the navigation above to get started!
     """)
     
     # Show quick stats
-    st.header("📊 Quick Overview")
+    st.header("Quick Overview")
     
     try:
         # Load data from Supabase
@@ -94,7 +72,7 @@ def main():
             st.metric("Receipts Stored", len(current_receipts_df))
         
         # Recent activity
-        st.header("📅 Recent Activity")
+        st.header("Recent Activity")
         
         col1, col2 = st.columns(2)
         

@@ -8,7 +8,7 @@ from src.utils.auth import init_connection, check_session
 from src.components.ui_components import render_location_form
 
 # Configure page
-st.set_page_config(page_title="Mileage Dictionary", page_icon="📍", layout="wide")
+st.set_page_config(page_title="Mileage Dictionary", layout="wide")
 
 # Check authentication
 supabase = init_connection()
@@ -25,7 +25,7 @@ else:
     st.stop()
 
 # Page content
-st.title("📍 Mileage Dictionary")
+st.title("Mileage Dictionary")
 st.markdown("Manage your saved locations for quick access when logging trips.")
 
 # Load current dictionary data
@@ -42,7 +42,7 @@ with col2:
     st.header("Saved Locations")
     
     # Add search/filter
-    search = st.text_input("🔍 Search locations", placeholder="Type to filter...")
+    search = st.text_input("Search locations", placeholder="Type to filter...")
     
     # Get all locations with IDs from Supabase
     from src.utils.auth import init_connection
@@ -108,7 +108,7 @@ with col2:
                 )
             
             with cols[1]:
-                if st.button("✏️ Edit", use_container_width=True):
+                if st.button("Edit", use_container_width=True):
                     # Find the selected location
                     selected = next((loc for loc in filtered_locations if loc['location_name'] == selected_location), None)
                     if selected:
@@ -116,7 +116,7 @@ with col2:
                         st.rerun()
             
             with cols[2]:
-                if st.button("🗑️ Delete", use_container_width=True):
+                if st.button("Delete", use_container_width=True):
                     # Find the selected location
                     selected = next((loc for loc in filtered_locations if loc['location_name'] == selected_location), None)
                     if selected:
@@ -128,55 +128,55 @@ with col2:
                 # Show edit form if editing
                 if st.session_state.get(f"editing_{loc['id']}", False):
                     with st.form(key=f"edit_form_{loc['id']}"):
-                        st.subheader(f"✏️ Edit: {loc['location_name']}")
+                        st.subheader(f"Edit: {loc['location_name']}")
                         new_name = st.text_input("Location Name", value=loc['location_name'])
                         new_address = st.text_input("Location Address", value=loc['location_address'])
                         
                         col_save, col_cancel = st.columns(2)
                         with col_save:
-                            if st.form_submit_button("💾 Save Changes", use_container_width=True):
+                            if st.form_submit_button("Save Changes", use_container_width=True):
                                 try:
                                     supabase.table('mileage_dictionary').update({
                                         'location_name': new_name,
                                         'location_address': new_address
                                     }).eq('id', loc['id']).execute()
                                     
-                                    st.success(f"✅ Updated '{new_name}'!")
+                                    st.success(f"Updated '{new_name}'!")
                                     del st.session_state[f"editing_{loc['id']}"]
                                     st.rerun()
                                 except Exception as e:
                                     st.error(f"Error updating location: {str(e)}")
                         
                         with col_cancel:
-                            if st.form_submit_button("❌ Cancel", use_container_width=True):
+                            if st.form_submit_button("Cancel", use_container_width=True):
                                 del st.session_state[f"editing_{loc['id']}"]
                                 st.rerun()
                 
                 # Show delete confirmation
                 if st.session_state.get(f"confirm_delete_{loc['id']}", False):
-                    st.warning(f"⚠️ Delete **{loc['location_name']}**?")
+                    st.warning(f"Delete **{loc['location_name']}**?")
                     st.caption(loc['location_address'])
                     col_confirm, col_cancel = st.columns(2)
                     
                     with col_confirm:
-                        if st.button("✅ Yes, Delete", key=f"confirm_yes_{loc['id']}", use_container_width=True):
+                        if st.button("Yes, Delete", key=f"confirm_yes_{loc['id']}", use_container_width=True):
                             try:
                                 supabase.table('mileage_dictionary').delete().eq('id', loc['id']).execute()
-                                st.success(f"✅ Deleted '{loc['location_name']}'")
+                                st.success(f"Deleted '{loc['location_name']}'")
                                 del st.session_state[f"confirm_delete_{loc['id']}"]
                                 st.rerun()
                             except Exception as e:
                                 st.error(f"Error deleting location: {str(e)}")
                     
                     with col_cancel:
-                        if st.button("❌ Cancel", key=f"confirm_no_{loc['id']}", use_container_width=True):
+                        if st.button("Cancel", key=f"confirm_no_{loc['id']}", use_container_width=True):
                             del st.session_state[f"confirm_delete_{loc['id']}"]
                             st.rerun()
     else:
         st.info("No locations saved yet. Add your first location using the form on the left!")
 
 # Add some helpful tips
-with st.expander("💡 Tips for Managing Locations"):
+with st.expander("Tips for Managing Locations"):
     st.markdown("""
     - **Save frequently visited places** to speed up trip logging
     - **Use descriptive names** like "Home", "Office", "Client Site A"

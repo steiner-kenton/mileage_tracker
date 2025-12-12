@@ -4,12 +4,12 @@ Receipt Tracker Page - Upload and manage receipts
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
-from src.utils.supabase_utils import get_sheet_data
+from src.utils.supabase_utils import get_data
 from src.utils.auth import init_connection, check_session
 from src.components.ui_components import render_receipt_section
 
 # Configure page
-st.set_page_config(page_title="Receipt Tracker", page_icon="🧾", layout="wide")
+st.set_page_config(page_title="Receipt Tracker", layout="wide")
 
 # Check authentication
 supabase = init_connection()
@@ -26,21 +26,21 @@ else:
     st.stop()
 
 # Page content
-st.title("🧾 Receipt Tracker")
+st.title("Receipt Tracker")
 st.markdown("Upload and manage your business expense receipts with automatic OCR extraction.")
 
 # Load receipts data
-current_receipts_df = get_sheet_data("Receipts", create_if_missing=True, 
+current_receipts_df = get_data("Receipts", create_if_missing=True, 
                                    headers=["date", "store_name", "total", "upload_timestamp"])
 
 # Receipt upload section
-st.header("📤 Upload New Receipt")
+st.header("Upload New Receipt")
 render_receipt_section(current_receipts_df)
 
 st.divider()
 
 # Receipt history
-st.header("📋 Receipt History")
+st.header("Receipt History")
 
 # Add filters
 col_filter1, col_filter2, col_filter3 = st.columns(3)
@@ -54,7 +54,7 @@ with col_filter1:
 
 with col_filter2:
     # Search filter
-    search = st.text_input("🔍 Search receipts", placeholder="Search by store name...")
+    search = st.text_input("Search receipts", placeholder="Search by store name...")
 
 with col_filter3:
     # Sort option
@@ -155,7 +155,7 @@ if len(filtered_receipts) > 0:
         # Download button
         csv = filtered_receipts.to_csv(index=False)
         st.download_button(
-            label="📥 Download as CSV",
+            label="Download as CSV",
             data=csv,
             file_name=f"receipts_{datetime.now().strftime('%Y%m%d')}.csv",
             mime="text/csv"
@@ -169,7 +169,7 @@ else:
     st.info("No receipts uploaded yet. Upload your first receipt using the form above!")
 
 # Add helpful tips
-with st.expander("💡 Tips for Managing Receipts"):
+with st.expander("Tips for Managing Receipts"):
     st.markdown("""
     - **Upload receipts promptly** after making purchases
     - **Take clear photos** for best OCR results
@@ -180,7 +180,7 @@ with st.expander("💡 Tips for Managing Receipts"):
     """)
 
 # Add OCR tips
-with st.expander("📸 Tips for Better OCR Results"):
+with st.expander("Tips for Better OCR Results"):
     st.markdown("""
     - **Good lighting** - Avoid shadows and glare
     - **Flat surface** - Lay receipt flat, don't fold
