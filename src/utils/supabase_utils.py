@@ -285,11 +285,6 @@ def get_data(table_name, create_if_missing=False, headers=None):
         st.error(f"Error loading data from {table_name}: {str(e)}")
         return pd.DataFrame()
 
-# Backward compatibility alias
-def get_sheet_data(sheet_name, create_if_missing=False, headers=None):
-    """Backward compatibility wrapper for get_data"""
-    return get_data(sheet_name, create_if_missing, headers)
-
 def add_data(data, table_name):
     """
     Add data to Supabase tables
